@@ -1,0 +1,15 @@
+#!/bin/sh
+cd "${0%/*}" || exit 1
+
+: "${WM_PROJECT_DIR:?OpenFOAM environment is not loaded. Source an OpenFOAM-v2406 to OpenFOAM-v2506 bashrc first.}"
+
+wclean
+wclean libso lagrangian/turbulence
+wclean libso lagrangian/intermediate
+wclean libso lagrangian/basic
+wclean libso lagrangian/distributionModels
+
+if [ -d lagrangian/solidParticle ]; then
+    wclean libso lagrangian/solidParticle
+fi
+
