@@ -73,27 +73,60 @@ subModels
 {
     particleForces
     {
-        Coulomb
+        sphereDrag;
+        gravity;       // If you use only submicron particles, you do not need this
+        BrownianMotion
         {
-            q   constant -1e-16;
-            E   E;
+            turbulence false;
+            lambda     68e-9;
         }
     }
 
-    phaseChangeModel liquidEvapFuchsKnudsen;
+    heatTransferModel  RanzMarshall; // fluid - particle heat transfer
+    // RanzMarshall -> q=hA(T∞​−Tp​)
+    RanzMarshallCoeffs
+    {
+        BirdCorrection  off;
+    }
+
+    compositionModel singleMixtureFraction; // Defines how particle composition is treated
+    // singleMixtureFraction: uses a single mixture fraction to track composition
+    
+    singleMixtureFractionCoeffs
+    {
+        phases
+        (
+            gas
+            {
+            }
+            liquid
+            {
+                H2O  1;
+            }
+            solid
+            {
+                NaCl 1;
+            }
+        );
+    
+        YGasTot0        0;
+        YLiquidTot0     1;
+        YSolidTot0      0;
+    }
+
+    phaseChangeModel  liquidEvapFuchsKnudsen;
     liquidEvapFuchsKnudsenCoeffs
     {
-        solution            (H2O NaCl);
-        gamma               6.6e-08;
-        alpham              1.0;
+        gamma               6.8e-8;     // Mean gas free path
+        alpham              1;          // The mass thermal accomodation
+        solution            (H2O NaCl); // Solution (liquid solid)
+
         activityCoefficient Hoff;
-        ic                  0;
-        enthalpyTransfer    latentHeat;
+        ic                  1.85;
+        enthalpyTransfer    enthalpyDifference;
     }
 }
 ```
-
-For electric-force calculations, provide a volVectorField with the name selected by the `E` entry. The default field name is `E`.
 
 ## Usage
 
