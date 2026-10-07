@@ -131,10 +131,14 @@ For nano-droplet calculations, review the parcel `constantProperties` section ca
 ```text
 constantProperties
 {
-    rho0                 -1;
-    minParcelMass        1e-21;
-    volumeUpdateMethod   updateRhoAndVol;
-    lockParcelDiameterSet false;
+    rho0            1000;             // water
+    T0              298.15;
+    Cp0             4187;
+    minParcelMass   5.23599e-25;      // 1 nm water droplets 
+    lockParcelDiameterSet   false;    // default "false"
+    lockParcelDiameter      800e-9;   // unit is (m). vaild only when lockParcelDiameterSet is "true"
+
+    volumeUpdateMethod  updateRhoAndVol;
 }
 ```
 
